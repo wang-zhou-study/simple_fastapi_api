@@ -9,6 +9,10 @@ LOG_FILE = "logs.txt"
 class LogItem(BaseModel):
     content: str
 
+@app.get("/")
+def home():
+    return {"message":"hello fastapi"}
+
 #获取全部日志
 @app.get("/logs")
 def get_logs():
@@ -25,7 +29,7 @@ def get_logs():
     
     except FileNotFoundError:
         return{
-            "logs": []
+            "error":"日志不存在"
         }
 
 #添加日志
@@ -36,7 +40,8 @@ def add_log(log: LogItem):
         f.write(log.content + "\n")
 
     return{
-        "message": "日志添加成功"
+        "message": "日志添加成功",
+        "content": log.content
     }
 
 #搜索日志
@@ -54,10 +59,11 @@ def search_logs(keyword: str):
                 result.append(log.strip())
 
         return{
+            "keyword": keyword,
             "result": result
         }
     except FileNotFoundError:
         return{
-            "result": []
+            "error": "日志文件不存在"
         }
 
