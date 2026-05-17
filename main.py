@@ -7,7 +7,9 @@ LOG_FILE = "logs.txt"
 
 #数据模型
 class LogItem(BaseModel):
+    title: str
     content: str
+    author: str
 
 @app.get("/")
 def home():
@@ -32,19 +34,25 @@ def get_logs():
             "error":"日志不存在"
         }
 
-#添加日志
+# 新增日志
 @app.post("/logs")
 def add_log(log: LogItem):
 
-    with open (LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(log.content + "\n")
+    log_text = (
+        f"标题: {log.title} | "
+        f"内容: {log.content} | "
+        f"作者: {log.author}"
+    )
 
-    return{
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(log_text + "\n")
+
+    return {
         "message": "日志添加成功",
-        "content": log.content
+        "log": log
     }
 
-#搜索日志
+# 搜索日志
 @app.get("/logs/search")
 def search_logs(keyword: str):
 
@@ -58,12 +66,13 @@ def search_logs(keyword: str):
             if keyword.lower() in log.lower():
                 result.append(log.strip())
 
-        return{
+        return {
             "keyword": keyword,
             "result": result
         }
+
     except FileNotFoundError:
-        return{
+        return {
             "error": "日志文件不存在"
         }
 
