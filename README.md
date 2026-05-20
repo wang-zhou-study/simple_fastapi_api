@@ -35,6 +35,8 @@
 - Python 3
 - FastAPI
 - Uvicorn
+- SQLite
+
 
 ---
 
@@ -48,6 +50,12 @@ simple_fastapi_api/
 ├── README.md
 └── .gitignore
 ```
+
+## 项目结构说明
+
+- routers：API 路由模块
+- models：Pydantic 数据模型
+- utils：工具函数
 
 ---
 
@@ -147,6 +155,10 @@ GET /search?keyword=python
   "keyword": "python"
 }
 ```
+
+## 数据存储
+
+项目使用 SQLite 存储日志数据。
 
 ---
 
