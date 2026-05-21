@@ -1,5 +1,5 @@
 import sqlite3
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from models.log_model import LogItem
 
 router = APIRouter()
@@ -7,7 +7,6 @@ router = APIRouter()
 DB_NAME = "logs.db"
 
 
-print("logs.py loaded")
 
 @router.post("/logs")
 def add_log(log: LogItem):
@@ -47,4 +46,31 @@ def get_logs():
 
     return {
         "logs": logs
+    }
+
+@router.get("/logs/{log_id}")
+def get_log(log_id: int):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM logs WHERE id=?",
+        (log_id)
+    )
+
+    log = cursor.fetchone()
+
+    conn.close()
+
+    if log is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="日志不存在"
+        )
+    
+    return{
+        "log": log
     }
