@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+
+import logger_config
+
 from routers.logs import router
 from database import init_db
 
@@ -15,4 +18,3 @@ def home():
     return {
         "message": "Hello FastAPI"
     }
-
