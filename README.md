@@ -1,32 +1,27 @@
 # Simple FastAPI API
 
-一个使用 FastAPI 编写的简单后端 API 项目。
+一个基于 FastAPI + SQLite 构建的简易日志管理 API 项目。
 
 该项目用于学习：
 
-- FastAPI 基础开发
-- RESTful API
-- 路由与参数处理
-- JSON 数据返回
-- 文件读写
-- GitHub 项目管理
+- FastAPI 接口开发
+- RESTful API 设计
+- SQLite 数据库操作
+- Pydantic 数据校验
+- logging 日志记录
+- Python 工程化项目结构
 
 ---
 
-# 功能
+# 项目功能
 
-## 基础接口
+## 日志功能
 
-- 首页接口
-- 用户信息接口
-- 路径参数接口
-- 查询参数接口
-
-## 日志接口
-
-- 获取全部日志
 - 新增日志
-- 搜索日志
+- 获取全部日志
+- 获取单条日志
+- 错误处理（404）
+- logging 日志记录
 
 ---
 
@@ -36,30 +31,120 @@
 - FastAPI
 - Uvicorn
 - SQLite
-
+- Pydantic
 
 ---
 
 # 项目结构
 
 ```text
-simple_fastapi_api/
+simple_api/
+│
+├── models/
+│   ├── __init__.py
+│   └── log_model.py
+│
+├── routers/
+│   ├── __init__.py
+│   └── logs.py
+│
+├── utils/
+│   ├── __init__.py
+│   └── file_handler.py
+│
+├── database.py
+├── logger_config.py
 ├── main.py
-├── logs.txt
 ├── requirements.txt
 ├── README.md
-└── .gitignore
+└── logs.db
 ```
-
-## 项目结构说明
-
-- routers：API 路由模块
-- models：Pydantic 数据模型
-- utils：工具函数
 
 ---
 
-# 安装依赖
+# API 接口
+
+## 获取全部日志
+
+```http
+GET /logs
+```
+
+---
+
+## 新增日志
+
+```http
+POST /logs
+```
+
+请求示例：
+
+```json
+{
+  "title": "学习 FastAPI",
+  "content": "今天学习了 POST 接口",
+  "author": "wangzhou"
+}
+```
+
+---
+
+## 获取单条日志
+
+```http
+GET /logs/{log_id}
+```
+
+---
+
+# 错误处理
+
+当日志不存在时：
+
+```json
+{
+  "detail": "日志不存在"
+}
+```
+
+状态码：
+
+```http
+404 Not Found
+```
+
+---
+
+# logging 日志系统
+
+项目使用 Python logging 模块记录 API 操作日志。
+
+日志文件：
+
+```text
+app.log
+```
+
+日志示例：
+
+```text
+2026-05-12 20:10:21 - INFO - 获取全部日志
+```
+
+---
+
+# 本地运行
+
+## 1. 克隆项目
+
+```bash
+git clone git@github.com:wang-zhou-study/simple_fastapi_api.git
+```
+
+---
+
+## 2. 安装依赖
 
 ```bash
 pip install -r requirements.txt
@@ -67,23 +152,17 @@ pip install -r requirements.txt
 
 ---
 
-# 启动项目
+## 3. 启动项目
 
 ```bash
 uvicorn main:app --reload
 ```
 
-启动后访问：
-
-```text
-http://127.0.0.1:8000
-```
-
 ---
 
-# API 文档
+# Swagger API 文档
 
-FastAPI 会自动生成 Swagger 文档：
+启动后访问：
 
 ```text
 http://127.0.0.1:8000/docs
@@ -91,92 +170,30 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# API 示例
-
-## 首页接口
-
-```http
-GET /
-```
-
-返回：
-
-```json
-{
-  "message": "Hello FastAPI"
-}
-```
-
----
-
-## 获取用户信息
-
-```http
-GET /user
-```
-
-返回：
-
-```json
-{
-  "name": "wangzhou",
-  "age": 25
-}
-```
-
----
-
-## 获取指定用户
-
-```http
-GET /user/1
-```
-
-返回：
-
-```json
-{
-  "user_id": 1
-}
-```
-
----
-
-## 搜索接口
-
-```http
-GET /search?keyword=python
-```
-
-返回：
-
-```json
-{
-  "keyword": "python"
-}
-```
-
-## 数据存储
-
-项目使用 SQLite 存储日志数据。
-
----
-
 # 学习目标
 
-该项目用于练习：
+该项目主要用于练习：
 
-- API 开发
-- 后端工程基础
-- FastAPI 路由设计
-- Git 与 GitHub 工作流
+- FastAPI 基础开发
+- RESTful API
+- 数据库操作
+- Python 工程化
+- 后端开发基础
+
+后续计划：
+
+- 更新日志接口
+- 删除日志接口
+- 用户登录系统
+- JWT 鉴权
+- SQLAlchemy ORM
+- Docker 部署
 
 ---
 
-# 后续计划
+# 作者
 
-- [ ] 添加 POST 接口
-- [ ] 使用 Pydantic
-- [ ] 添加 logging
-- [ ] 添加错误处理
-- [ ] 项目模块化拆分
+GitHub:
+
+https://github.com/wang-zhou-study
+
