@@ -52,3 +52,36 @@ def get_logs():
     return {
         "logs": logs
     }
+
+@router.put("/logs/{log_id}")
+def update_log(log_id: int, log: LogItem):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE logs
+        SET title=?, content=?, author=?
+        WHERE id=?
+        """,
+        (log.title, log.content, log.author, log_id)
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+
+        conn.close()
+
+        raise HTTPException(
+            status_code=404,
+            detail="日志不存在"
+        )
+
+    conn.close()
+
+    return {
+        "message": "日志更新成功"
+    }
