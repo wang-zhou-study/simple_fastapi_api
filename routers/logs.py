@@ -85,3 +85,32 @@ def update_log(log_id: int, log: LogItem):
     return {
         "message": "日志更新成功"
     }
+
+@router.delete("/logs/{log_id}")
+def delete_log(log_id: int):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM logs WHERE id=?",
+        (log_id,)
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+
+        conn.close()
+
+        raise HTTPException(
+            status_code=404,
+            detail="日志不存在"
+        )
+
+    conn.close()
+
+    return {
+        "message": "日志删除成功"
+    }
