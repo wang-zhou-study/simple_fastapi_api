@@ -114,3 +114,32 @@ def delete_log(log_id: int):
     return {
         "message": "日志删除成功"
     }
+
+@router.put("/logs/{log_id}")
+def update_log(log_id: int, log: UpdateLogItem):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE logs
+        SET title = ?, content = ?, author = ?
+        WHERE id = ?
+        """,
+        (
+            log.title,
+            log.content,
+            log.author,
+            log_id
+        )
+    )
+
+    conn.commit()
+
+    conn.close()
+
+    return {
+        "message": "日志更新成功"
+    }
