@@ -94,20 +94,19 @@ def delete_log(log_id: int):
     cursor = conn.cursor()
 
     cursor.execute(
-        "DELETE FROM logs WHERE id=?",
+        "DELETE FROM logs WHERE id = ?",
         (log_id,)
     )
-
-    conn.commit()
 
     if cursor.rowcount == 0:
 
         conn.close()
 
-        raise HTTPException(
-            status_code=404,
-            detail="日志不存在"
-        )
+        return {
+            "error": "日志不存在"
+        }
+
+    conn.commit()
 
     conn.close()
 
