@@ -142,3 +142,26 @@ def update_log(log_id: int, log: UpdateLogItem):
     return {
         "message": "日志更新成功"
     }
+
+@router.get("/search")
+def search_logs(keyword: str):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT * FROM logs
+        WHERE title LIKE ?
+        """,
+        (f"%{keyword}%",)
+    )
+
+    logs = cursor.fetchall()
+
+    conn.close()
+
+    return {
+        "logs": logs
+    }
