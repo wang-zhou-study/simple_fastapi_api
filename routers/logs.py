@@ -37,8 +37,6 @@ def add_log(log: LogItem):
 @router.get("/logs")
 def get_logs():
 
-    logging.info("获取全部日志")
-
     conn = sqlite3.connect(DB_NAME)
 
     cursor = conn.cursor()
@@ -49,8 +47,21 @@ def get_logs():
 
     conn.close()
 
+    result = []
+
+    for log in logs:
+
+        result.append(
+            {
+                "id": log[0],
+                "title": log[1],
+                "content": log[2],
+                "author": log[3]
+            }
+        )
+
     return {
-        "logs": logs
+        "logs": result
     }
 
 @router.put("/logs/{log_id}")
