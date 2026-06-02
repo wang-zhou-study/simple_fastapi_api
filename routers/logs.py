@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from models.log_model import LogItem
 
@@ -18,13 +19,30 @@ def add_log(log: LogItem):
 
     cursor = conn.cursor()
 
+    created_at = datetime.now().strftime(
+    "%Y-%m-%d %H:%M:%S"
+    )
+
     cursor.execute(
         """
-        INSERT INTO logs (title, content, author)
-        VALUES (?, ?, ?)
+        INSERT INTO logs
+        (
+            title,
+            content,
+            author,
+            created_at
+        )
+        VALUES (?, ?, ?, ?)
         """,
-        (log.title, log.content, log.author)
+        (
+            log.title,
+            log.content,
+            log.author,
+            created_at
+        )
     )
+
+    
 
     conn.commit()
     conn.close()
@@ -125,34 +143,6 @@ def delete_log(log_id: int):
         "message": "日志删除成功"
     }
 
-@router.put("/logs/{log_id}")
-def update_log(log_id: int, log: UpdateLogItem):
-
-    conn = sqlite3.connect(DB_NAME)
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        UPDATE logs
-        SET title = ?, content = ?, author = ?
-        WHERE id = ?
-        """,
-        (
-            log.title,
-            log.content,
-            log.author,
-            log_id
-        )
-    )
-
-    conn.commit()
-
-    conn.close()
-
-    return {
-        "message": "日志更新成功"
-    }
 
 @router.get("/search")
 def search_logs(keyword: str):
