@@ -166,3 +166,33 @@ def search_logs(keyword: str):
     return {
         "logs": logs
     }
+
+@router.get("/logs/{log_id}")
+def get_log(log_id: int):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM logs WHERE id=?",
+        (log_id,)
+    )
+
+    log = cursor.fetchone()
+
+    conn.close()
+
+    if log is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="日志不存在"
+        )
+
+    return {
+        "id": log[0],
+        "title": log[1],
+        "content": log[2],
+        "author": log[3]
+    }
