@@ -53,13 +53,22 @@ def add_log(log: LogItem):
 
 
 @router.get("/logs")
-def get_logs():
+def get_logs(
+    page: int = 1,
+    size: int = 5
+):
+
+    offset = (page - 1) * size
 
     conn = sqlite3.connect(DB_NAME)
 
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM logs")
+    cursor.execute("""
+        SELECT * FROM logs
+        LIMIT ? OFFSET ?
+        """,
+        (size, offset))
 
     logs = cursor.fetchall()
 
