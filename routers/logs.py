@@ -4,6 +4,7 @@ import sqlite3
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from models.log_model import LogItem
+from fastapi import HTTPException
 
 router = APIRouter()
 
@@ -204,4 +205,63 @@ def get_log(log_id: int):
         "title": log[1],
         "content": log[2],
         "author": log[3]
+    }
+
+@router.get("/logs/{log_id}")
+def get_log(log_id: int):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM logs WHERE id=?",
+        (log_id,)
+    )
+
+    log = cursor.fetchone()
+
+    conn.close()
+
+    if log is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="日志不存在"
+        )
+
+    return {
+        "id": log[0],
+        "title": log[1],
+        "content": log[2],
+        "author": log[3]
+    }
+
+@router.get("/stats")
+def get_stats():
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT COUNT(*) FROM logs"
+    )
+
+    total_logs = cursor.fetchone()[0]
+
+    cursor.execute(
+        """
+        SELECT COUNT(DISTINCT author)
+        FROM logs
+        """
+    )
+
+    total_authors = cursor.fetchone()[0]
+
+    conn.close()
+
+    return {
+        "total_logs": total_logs,
+        "total_authors": total_authors
     }
