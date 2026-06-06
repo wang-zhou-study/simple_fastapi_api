@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 
+from config import DB_NAME
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from models.log_model import LogItem
@@ -8,7 +9,6 @@ from fastapi import HTTPException
 
 router = APIRouter()
 
-DB_NAME = "logs.db"
 
 
 @router.post("/logs")

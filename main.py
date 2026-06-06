@@ -2,10 +2,17 @@ from fastapi import FastAPI
 
 import logger_config
 
+from config import APP_NAME, VERSION
 from routers.logs import router
 from database import init_db
 
-app = FastAPI()
+import config
+
+print(config.__file__)
+
+app = FastAPI(    
+    title=APP_NAME,
+    version=VERSION)
 
 init_db()
 

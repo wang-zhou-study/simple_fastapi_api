@@ -1,6 +1,7 @@
 import sqlite3
 
-DB_NAME = "logs.db"
+from config import DB_NAME
+
 
 
 def init_db():
