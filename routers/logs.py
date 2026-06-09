@@ -265,3 +265,26 @@ def get_stats():
         "total_logs": total_logs,
         "total_authors": total_authors
     }
+
+
+@router.get("/stats")
+def get_stats():
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM logs
+        """
+    )
+
+    total = cursor.fetchone()[0]
+
+    conn.close()
+
+    return {
+        "total_logs": total
+    }
