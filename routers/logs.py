@@ -6,6 +6,11 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from models.log_model import LogItem
 from fastapi import HTTPException
+from services.log_services import (
+    get_all_logs,
+    get_log_by_id,
+    get_total_logs
+)
 
 router = APIRouter()
 
@@ -42,9 +47,6 @@ def add_log(log: LogItem):
             created_at
         )
     )
-
-    
-
     conn.commit()
     conn.close()
 
@@ -54,26 +56,9 @@ def add_log(log: LogItem):
 
 
 @router.get("/logs")
-def get_logs(
-    page: int = 1,
-    size: int = 5
-):
+def get_logs(page: int = 1, size: int = 5):
 
-    offset = (page - 1) * size
-
-    conn = sqlite3.connect(DB_NAME)
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT * FROM logs
-        LIMIT ? OFFSET ?
-        """,
-        (size, offset))
-
-    logs = cursor.fetchall()
-
-    conn.close()
+    logs = get_all_logs(page, size)
 
     result = []
 
@@ -84,7 +69,8 @@ def get_logs(
                 "id": log[0],
                 "title": log[1],
                 "content": log[2],
-                "author": log[3]
+                "author": log[3],
+                "created_at": log[4]
             }
         )
 
@@ -270,20 +256,7 @@ def get_stats():
 @router.get("/stats")
 def get_stats():
 
-    conn = sqlite3.connect(DB_NAME)
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        SELECT COUNT(*)
-        FROM logs
-        """
-    )
-
-    total = cursor.fetchone()[0]
-
-    conn.close()
+    total = get_total_logs()
 
     return {
         "total_logs": total
