@@ -11,6 +11,10 @@ from services.log_services import (
     get_log_by_id,
     get_total_logs
 )
+from utils.response import (
+    success_response,
+    error_response
+)
 
 router = APIRouter()
 
@@ -50,9 +54,9 @@ def add_log(log: LogItem):
     conn.commit()
     conn.close()
 
-    return {
-        "message": "日志添加成功"
-    }
+    return success_response(
+        message="日志添加成功"
+    )
 
 
 @router.get("/logs")
@@ -74,9 +78,9 @@ def get_logs(page: int = 1, size: int = 5):
             }
         )
 
-    return {
-        "logs": result
-    }
+    return success_response(
+        data=result
+    )
 
 @router.put("/logs/{log_id}")
 def update_log(log_id: int, log: LogItem):
@@ -107,9 +111,9 @@ def update_log(log_id: int, log: LogItem):
 
     conn.close()
 
-    return {
-        "message": "日志更新成功"
-    }
+    return success_response(
+        message="日志更新成功"
+    )
 
 @router.delete("/logs/{log_id}")
 def delete_log(log_id: int):
