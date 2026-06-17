@@ -9,6 +9,8 @@ from config import APP_NAME, VERSION
 from routers.logs import router
 from database import init_db
 from fastapi import Request
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 
 print(config.__file__)
@@ -51,3 +53,18 @@ async def log_requests(
     )
 
     return response
+
+@app.exception_handler(Exception)
+async def global_exception_handler(
+    request: Request,
+    exc: Exception
+):
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "code": 500,
+            "message": str(exc),
+            "data": None
+        }
+    )

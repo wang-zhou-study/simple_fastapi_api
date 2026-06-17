@@ -65,3 +65,116 @@ def get_total_logs():
     conn.close()
 
     return total
+
+def add_log(
+    title,
+    content,
+    author,
+    created_at
+):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO logs
+        (
+            title,
+            content,
+            author,
+            created_at
+        )
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            title,
+            content,
+            author,
+            created_at
+        )
+    )
+
+    conn.commit()
+
+    conn.close()
+
+def update_log(
+    log_id,
+    title,
+    content,
+    author
+):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE logs
+        SET
+            title=?,
+            content=?,
+            author=?
+        WHERE id=?
+        """,
+        (
+            title,
+            content,
+            author,
+            log_id
+        )
+    )
+
+    conn.commit()
+
+    affected = cursor.rowcount
+
+    conn.close()
+
+    return affected
+
+
+def delete_log(log_id):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM logs
+        WHERE id=?
+        """,
+        (log_id,)
+    )
+
+    conn.commit()
+
+    affected = cursor.rowcount
+
+    conn.close()
+
+    return affected
+
+def search_logs(keyword):
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT * FROM logs
+        WHERE title LIKE ?
+        """,
+        (f"%{keyword}%",)
+    )
+
+    logs = cursor.fetchall()
+
+    conn.close()
+
+    return logs
