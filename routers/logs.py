@@ -6,6 +6,9 @@ from fastapi import APIRouter
 from fastapi import HTTPException
 
 from models.log_model import LogItem
+from exceptions.custom_exception import (
+    LogNotFoundException
+)
 
 from services.log_services import (
     get_all_logs,
@@ -154,10 +157,8 @@ def get_log(log_id: int):
 
     if log is None:
 
-        raise HTTPException(
-            status_code=404,
-            detail="日志不存在"
-        )
+        raise LogNotFoundException()
+        
 
     return success_response(
         data={
