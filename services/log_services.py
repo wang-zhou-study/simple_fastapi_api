@@ -178,3 +178,25 @@ def search_logs(keyword):
     conn.close()
 
     return logs
+
+
+def get_author_stats():
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT author,
+               COUNT(*)
+        FROM logs
+        GROUP BY author
+        """
+    )
+
+    result = cursor.fetchall()
+
+    conn.close()
+
+    return result

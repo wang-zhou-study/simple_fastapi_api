@@ -14,6 +14,7 @@ from services.log_services import (
     get_all_logs,
     get_log_by_id,
     get_total_logs,
+    get_author_stats,
     add_log as add_log_service,
     update_log as update_log_service,
     delete_log as delete_log_service,
@@ -169,3 +170,24 @@ def get_log(log_id: int):
             "created_at": log[4]
         }
     )
+
+
+@router.get("/stats/authors")
+def author_stats():
+
+    result = get_author_stats()
+
+    data = []
+
+    for row in result:
+
+        data.append(
+            {
+                "author": row[0],
+                "count": row[1]
+            }
+        )
+
+    return {
+        "data": data
+    }
