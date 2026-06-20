@@ -5,14 +5,18 @@ import config
 import logging
 import time
 
-from config import APP_NAME, VERSION
+from config import (
+    APP_NAME,
+    VERSION,
+    DB_NAME
+)
 from routers.logs import router
 from database import init_db
 from fastapi import Request
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-
+print(DB_NAME)
 print(config.__file__)
 
 app = FastAPI(    
@@ -86,3 +90,4 @@ async def log_requests(
     ] = str(round(process_time, 4))
 
     return response
+
