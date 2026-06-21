@@ -1,11 +1,11 @@
-import sqlite3
+from database_manager import get_connection
 
-DB_NAME = "logs.db"
+
 
 
 def get_all_logs(page: int, size: int):
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -28,8 +28,8 @@ def get_all_logs(page: int, size: int):
 
 def get_log_by_id(log_id: int):
 
-    conn = sqlite3.connect(DB_NAME)
-
+    conn = get_connection()
+    
     cursor = conn.cursor()
 
     cursor.execute(
@@ -49,7 +49,7 @@ def get_log_by_id(log_id: int):
 
 def get_total_logs():
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -73,7 +73,7 @@ def add_log(
     created_at
 ):
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -107,7 +107,7 @@ def update_log(
     author
 ):
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -139,7 +139,7 @@ def update_log(
 
 def delete_log(log_id):
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -161,7 +161,7 @@ def delete_log(log_id):
 
 def search_logs(keyword):
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -182,7 +182,7 @@ def search_logs(keyword):
 
 def get_author_stats():
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_connection()
 
     cursor = conn.cursor()
 

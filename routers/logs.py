@@ -2,12 +2,17 @@ import logging
 
 from datetime import datetime
 
+
 from fastapi import APIRouter
 from fastapi import HTTPException
+from fastapi import Depends
 
 from models.log_model import LogItem
 from exceptions.custom_exception import (
     LogNotFoundException
+)
+from dependencies.pagination import (
+    pagination_params
 )
 
 from services.log_services import (
@@ -27,10 +32,6 @@ from utils.response import (
 )
 
 router = APIRouter()
-
-
-
-
 
 @router.post("/logs")
 def add_log(log: LogItem):
@@ -54,14 +55,17 @@ def add_log(log: LogItem):
         message="日志添加成功"
     )
 
-
 @router.get("/logs")
 def get_logs(
-    page: int = 1,
-    size: int = 5
+    params: dict = Depends(
+        pagination_params
+    )
 ):
 
-    logs = get_all_logs(page, size)
+    logs = get_all_logs(
+    params["page"],
+    params["size"]
+    )
 
     result = []
 
