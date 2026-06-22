@@ -15,6 +15,10 @@ from database import init_db
 from fastapi import Request
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from exceptions.custom_exception import LogNotFoundException
+
+from exceptions.handlers import log_not_found_handler
+
 
 print(DB_NAME)
 print(config.__file__)
@@ -91,3 +95,7 @@ async def log_requests(
 
     return response
 
+app.add_exception_handler(
+    LogNotFoundException,
+    log_not_found_handler
+)

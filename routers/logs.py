@@ -1,8 +1,6 @@
 import logging
 
 from datetime import datetime
-
-
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Depends
@@ -100,10 +98,7 @@ def update_log(
 
     if affected == 0:
 
-        raise HTTPException(
-            status_code=404,
-            detail="日志不存在"
-        )
+        raise LogNotFoundException()
 
     return success_response(
         message="日志更新成功"
@@ -119,10 +114,7 @@ def delete_log(log_id: int):
 
     if affected == 0:
 
-        raise HTTPException(
-            status_code=404,
-            detail="日志不存在"
-        )
+        raise LogNotFoundException()
 
     return success_response(
         message="日志删除成功"
@@ -139,10 +131,6 @@ def search_logs(keyword: str):
     return success_response(
         data=logs
     )
-
-
-
-
 
 @router.get("/stats")
 def get_stats():

@@ -1,8 +1,6 @@
 from database_manager import get_connection
 
 
-
-
 def get_all_logs(page: int, size: int):
 
     conn = get_connection()
