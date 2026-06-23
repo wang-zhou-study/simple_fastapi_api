@@ -4,13 +4,15 @@ from datetime import datetime
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Depends
-
 from models.log_model import LogItem
 from exceptions.custom_exception import (
     LogNotFoundException
 )
 from dependencies.pagination import (
     pagination_params
+)
+from services.log_services import (
+    search_logs as search_logs_service
 )
 
 from services.log_services import (
@@ -122,15 +124,34 @@ def delete_log(log_id: int):
 
 
 @router.get("/search")
-def search_logs(keyword: str):
+def search_logs(
+    keyword: str = None,
+    author: str = None
+):
 
     logs = search_logs_service(
-        keyword
+        keyword,
+        author
     )
 
+    data = []
+
+    for log in logs:
+
+        data.append(
+            {
+                "id": log[0],
+                "title": log[1],
+                "content": log[2],
+                "author": log[3],
+                "created_at": log[4]
+            }
+        )
+
     return success_response(
-        data=logs
+        data=data
     )
+
 
 @router.get("/stats")
 def get_stats():

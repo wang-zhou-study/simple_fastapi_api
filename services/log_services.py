@@ -157,18 +157,44 @@ def delete_log(log_id):
 
     return affected
 
-def search_logs(keyword):
+def search_logs(
+    keyword=None,
+    author=None
+):
 
     conn = get_connection()
 
     cursor = conn.cursor()
 
-    cursor.execute(
+    sql = """
+        SELECT *
+        FROM logs
+        WHERE 1=1
+    """
+
+    params = []
+
+    if keyword:
+
+        sql += """
+            AND title LIKE ?
         """
-        SELECT * FROM logs
-        WHERE title LIKE ?
-        """,
-        (f"%{keyword}%",)
+
+        params.append(
+            f"%{keyword}%"
+        )
+
+    if author:
+
+        sql += """
+            AND author = ?
+        """
+
+        params.append(author)
+
+    cursor.execute(
+        sql,
+        params
     )
 
     logs = cursor.fetchall()
