@@ -10,10 +10,20 @@ def pagination_params(
         5,
         ge=1,
         le=50
+    ),
+    order: str = Query(
+        "DESC"
     )
 ):
 
+    if order not in [
+        "ASC",
+        "DESC"
+    ]:
+        order = "DESC"
+
     return {
         "page": page,
-        "size": size
+        "size": size,
+        "order": order
     }

@@ -64,7 +64,8 @@ def get_logs(
 
     logs = get_all_logs(
     params["page"],
-    params["size"]
+    params["size"],
+    params["order"]
     )
 
     result = []

@@ -1,7 +1,17 @@
 from database_manager import get_connection
 
 
-def get_all_logs(page: int, size: int):
+def get_all_logs(
+    page: int,
+    size: int,
+    order: str
+):
+
+    if order not in [
+        "ASC",
+        "DESC"
+    ]:
+        order = "DESC"
 
     conn = get_connection()
 
@@ -10,8 +20,10 @@ def get_all_logs(page: int, size: int):
     offset = (page - 1) * size
 
     cursor.execute(
-        """
-        SELECT * FROM logs
+        f"""
+        SELECT *
+        FROM logs
+        ORDER BY created_at {order}
         LIMIT ? OFFSET ?
         """,
         (size, offset)
