@@ -22,6 +22,7 @@ from exceptions.handlers import log_not_found_handler
 
 print(DB_NAME)
 print(config.__file__)
+print("重启检测2")
 
 app = FastAPI(    
     title=APP_NAME,
