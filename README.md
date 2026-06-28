@@ -1,245 +1,300 @@
-# Simple FastAPI Log API
+# 📘 Simple Log API
 
-一个基于 FastAPI 开发的日志管理系统练手项目。
+一个使用 **FastAPI + SQLite** 编写的日志管理系统。
 
-## 项目简介
-
-本项目用于学习 FastAPI 后端开发。
-
-目前已实现：
-
-* 创建日志
-* 查询日志
-* 修改日志
-* 删除日志
-* 关键词搜索
-* 分页查询
-* SQLite 数据库存储
-* Pydantic 数据校验
-* Logging 日志记录
+这是我的 Python 后端学习项目，目前主要用于学习 RESTful API、项目分层、数据库操作以及 FastAPI 开发。
 
 ---
 
-## 技术栈
+# 项目功能
 
-* Python 3.13
-* FastAPI
-* SQLite3
-* Pydantic
-* Uvicorn
+目前已经完成：
+
+- ✅ 新增日志
+- ✅ 查询全部日志
+- ✅ 根据 ID 查询日志
+- ✅ 修改日志
+- ✅ 删除日志
+- ✅ 标题搜索
+- ✅ 分页查询
+- ✅ 请求日志记录
+- ✅ 作者统计
+- ✅ 全部日志数量统计
+- ✅ Service 层重构
+- ✅ 统一响应格式
+- ✅ 自定义异常
 
 ---
 
-## 项目结构
+# 技术栈
 
-```text
-simple_api/
+- Python 3.14
+- FastAPI
+- SQLite3
+- Uvicorn
+- Pydantic
+- Logging
 
-├── main.py
-├── config.py
-├── database.py
-├── logger_config.py
-├── logs.db
+---
 
-├── models/
-│   └── log_model.py
+# 项目结构
 
-├── routers/
-│   └── logs.py
-
-├── utils/
-│   └── file_handler.py
-
-├── README.md
-└── requirements.txt
+```
+simple_api
+│
+├── main.py                 # FastAPI入口
+├── config.py               # 项目配置
+├── database.py             # 初始化数据库
+├── database_manager.py     # 数据库连接管理
+├── logger_config.py        # 日志配置
+│
+├── models
+│     └── log_model.py
+│
+├── routers
+│     └── logs.py
+│
+├── services
+│     └── log_services.py
+│
+├── utils
+│     ├── response.py
+│     ├── pagination.py
+│     └── file_handler.py
+│
+├── exceptions
+│     └── custom_exception.py
+│
+└── logs.db
 ```
 
 ---
 
-## 数据库结构
+# 项目分层
 
-### logs 表
+```
+HTTP请求
+      │
+      ▼
+routers
+      │
+      ▼
+services
+      │
+      ▼
+SQLite
+      │
+      ▼
+返回数据
+      │
+      ▼
+统一Response
+```
 
-| 字段         | 类型      |
-| ---------- | ------- |
-| id         | INTEGER |
-| title      | TEXT    |
-| content    | TEXT    |
-| author     | TEXT    |
-| created_at | TEXT    |
+这样每一层只负责自己的工作：
+
+Router
+
+- 接收请求
+- 参数校验
+- 返回响应
+
+Service
+
+- 操作数据库
+- SQL 编写
+- 返回数据
+
+Utils
+
+- 工具函数
+- 分页
+- Response
+- 日志
+
+Models
+
+- 数据模型
+- 请求参数验证
+
+Exceptions
+
+- 自定义异常
 
 ---
 
-## API 接口
+# API
 
-### 新增日志
+## 获取所有日志
 
-**POST**
+GET
 
-```http
-/logs
 ```
-
-请求体：
-
-```json
-{
-  "title": "学习FastAPI",
-  "content": "今天学习了数据库",
-  "author": "wangzhou"
-}
-```
-
-返回：
-
-```json
-{
-  "message": "日志添加成功"
-}
-```
-
----
-
-### 获取全部日志
-
-**GET**
-
-```http
-/logs
-```
-
----
-
-### 分页查询
-
-**GET**
-
-```http
 /logs?page=1&size=5
 ```
 
 ---
 
-### 搜索日志
+## 获取单条日志
 
-**GET**
+GET
 
-```http
-/search?keyword=FastAPI
+```
+/logs/{id}
 ```
 
 ---
 
-### 修改日志
+## 新增日志
 
-**PUT**
+POST
 
-```http
-/logs/{id}
+```
+/logs
 ```
 
-请求体：
+Body
 
 ```json
 {
-  "title": "修改后的标题",
-  "content": "修改后的内容",
-  "author": "wangzhou"
+    "title":"Python",
+    "content":"FastAPI学习",
+    "author":"zhou"
 }
 ```
 
 ---
 
-### 删除日志
+## 修改日志
 
-**DELETE**
+PUT
 
-```http
+```
 /logs/{id}
 ```
 
 ---
 
-## 启动项目
+## 删除日志
 
-### 1. 克隆项目
+DELETE
 
-```bash
-git clone git@github.com:wang-zhou-study/simple_fastapi_api.git
 ```
-
-### 2. 进入项目目录
-
-```bash
-cd simple_fastapi_api
-```
-
-### 3. 安装依赖
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. 启动项目
-
-```bash
-uvicorn main:app --reload
+/logs/{id}
 ```
 
 ---
 
-## 访问接口文档
+## 搜索日志
 
-启动成功后访问：
+GET
 
-```text
-http://127.0.0.1:8000/docs
+```
+/search?keyword=Python
 ```
 
-FastAPI 会自动生成 Swagger API 文档。
+---
+
+## 作者统计
+
+GET
+
+```
+/stats/authors
+```
 
 ---
 
-## 学习收获
+## 日志总数
 
-通过本项目学习了：
+GET
 
-* FastAPI 基础开发
-* RESTful API 设计
-* APIRouter 路由拆分
-* Pydantic 数据模型
-* SQLite 数据库操作
-* CRUD 实现
-* 分页与搜索
-* Logging 日志系统
-* Git 与 GitHub 协作
-* Bug 调试与 Traceback 分析
+```
+/stats
+```
 
 ---
 
-## 已解决的问题
+# 返回格式
 
-开发过程中解决了以下问题：
+成功：
 
-* GitHub SSH 配置
-* Git Push 网络连接问题
-* ImportError 导入错误
-* Pydantic 模型定义错误
-* SQLite 字段缺失错误
-* FastAPI OpenAPI 文档加载失败
-* 分页参数未定义错误
+```json
+{
+    "code":200,
+    "message":"success",
+    "data":[]
+}
+```
+
+失败：
+
+```json
+{
+    "code":400,
+    "message":"error",
+    "data":null
+}
+```
 
 ---
 
-## 后续计划
+# 已完成学习内容
 
-* SQLAlchemy ORM
-* 用户注册登录
-* JWT 身份认证
-* Docker 部署
-* 自动化测试
-* 云服务器部署
-* Nginx + Linux 部署
+✔ FastAPI 路由
+
+✔ RESTful API
+
+✔ SQLite 数据库
+
+✔ SQL 基础
+
+✔ CRUD
+
+✔ Pydantic
+
+✔ Service 分层
+
+✔ Logging
+
+✔ 分页查询
+
+✔ 查询参数
+
+✔ 自定义异常
+
+✔ 统一返回格式
+
+---
+
+# 下一步计划
+
+准备继续学习：
+
+- [ ] 数据库连接池
+- [ ] SQLAlchemy ORM
+- [ ] Repository 模式
+- [ ] JWT 登录认证
+- [ ] 用户系统
+- [ ] Token 权限
+- [ ] 文件上传
+- [ ] Docker 部署
+- [ ] Pytest 自动化测试
+
+---
+
+# 学习目标
+
+通过这个项目逐步学习：
+
+- Python 后端开发
+- FastAPI
+- RESTful API
+- 数据库设计
+- Web 开发
+- 项目架构设计
+
+最终完成一个具有完整登录、权限、数据库、部署能力的小型后端项目。
 
 ---
 
