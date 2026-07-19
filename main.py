@@ -11,7 +11,11 @@ from config import (
     DB_NAME
 )
 from routers.logs import router
-from database import init_db
+#from database import init_db
+
+from database.db import engine
+from models.log import Base
+
 from fastapi import Request
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -28,7 +32,7 @@ app = FastAPI(
     title=APP_NAME,
     version=VERSION)
 
-init_db()
+#init_db()
 
 app.include_router(router)
 
